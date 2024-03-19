@@ -1,0 +1,64 @@
+---
+# Ansible | Task | remove extra file
+- name: configure hosts
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update apt update
+      apt:
+        update_cache: yes
+
+    - name: Install Matrix screensaver
+      apt:
+        name: cmatrix # Assuming this is the correct package name
+
+    - name: Add entries to /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item }}"
+      loop:
+        - "192.168.1.120 lab-k8s-m01"
+        - "192.168.1.121 lab-k8s-w01"
+        - "192.168.1.122 lab-k8s-w02"
+
+    # - name: Reboot Ubuntu host
+    #   reboot:
+    #     reboot_timeout: 90
+    #     test_command: /usr/bin/uptime
+## double check cos when remove the DHCP the internet stops
+
+# - name: Comment out renderers and activators lines in cloud.cfg
+#   lineinfile:
+#     path: /etc/cloud/cloud.cfg
+#     regexp: "^(\\s*)renderers: \\['netplan', 'eni', 'sysconfig'\\]"
+#     line: "# \\g<0>"
+#     backrefs: yes
+#   when: ansible_distribution == 'Ubuntu' # Only perform this task on Ubuntu
+
+# - name: Comment out activators lines in cloud.cfg
+#   lineinfile:
+#     path: /etc/cloud/cloud.cfg
+#     regexp: "^(\\s*)activators: \\['netplan', 'eni', 'network-manager', 'networkd'\\]"
+#     line: "# \\g<0>"
+#     backrefs: yes
+#   when: ansible_distribution == 'Ubuntu' # Only perform this task on Ubuntu
+
+# - name: Remove file
+#   file:
+#     path: /etc/netplan/00-installer-config.yaml
+#     state: absent
+
+# - name: Rename file
+#   command: mv /etc/netplan/50-cloud-init.yaml /etc/netplan/00-installer-config.yaml
+
+# - name: Remove 50-cloud-init.yaml
+#   file:
+#     path: /etc/netplan/50-cloud-init.yaml
+#     state: absent
+
+# - name: Restart networking
+#   command: systemctl restart networking
+
+# - name: Apply netplan configuration
+#   command: netplan apply

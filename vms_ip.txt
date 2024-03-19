@@ -1,0 +1,5 @@
+[master]
+192.168.1.120 ansible_user=ubuntu
+[workers]
+192.168.1.121 ansible_user=ubuntu
+192.168.1.122 ansible_user=ubuntu

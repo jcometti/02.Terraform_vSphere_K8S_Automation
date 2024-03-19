@@ -1,0 +1,12 @@
+---
+- name: Check if Docker is installed
+  command: docker --version
+  register: docker_installed
+  failed_when: docker_installed.stderr != '' and 'command not found' in docker_installed.stderr
+  ignore_errors: true
+
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+  when: docker_installed is failed
