@@ -93,7 +93,7 @@ resource "vsphere_virtual_machine" "vm" {
 
 resource "null_resource" "run_ansible" {
   provisioner "local-exec" {
-    command     = "ansible-playbook -i vms_ip.txt hosts_and_netplan_config.yml"
+    command     = "ansible-playbook -i vms_ip.txt ubuntu_configuration.yml"
     working_dir = path.module
   }
 

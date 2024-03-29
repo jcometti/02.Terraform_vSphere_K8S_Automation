@@ -30,6 +30,7 @@ vms = {
   lab-k8s-test_01 = {
     name  = "lab-k8s-m01"
     vm_ip = "192.168.1.120"
+
   },
   lab-k8s-test_02 = {
     name  = "lab-k8s-w01"

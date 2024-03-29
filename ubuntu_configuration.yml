@@ -1,0 +1,64 @@
+---
+# Ansible | Task | remove extra file
+- name: configure hosts
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install Matrix screensaver
+      apt:
+        name: cmatrix # Assuming this is the correct package name
+
+    - name: Add entries to /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item }}"
+      loop:
+        - "192.168.1.120 lab-k8s-m01"
+        - "192.168.1.121 lab-k8s-w01"
+        - "192.168.1.122 lab-k8s-w02"
+
+    - name: Rename file 50-cloud-init.yaml to 00-installer-config.yaml
+      command: mv "/etc/netplan/50-cloud-init.yaml" "/etc/netplan/00-installer-config.yaml"
+      # when: deleted_file_result is succeeded
+
+    - name: Delete file 50-cloud-init.yaml
+      file:
+        path: "/etc/netplan/"
+        state: absent
+        regexp: "50-cloud-init.yaml"
+      register: deleted_file_result
+      ignore_errors: yes
+
+    - name: Change file 50-cloud-init.yaml permition
+      command: chmod 600 /etc/netplan/00-installer-config.yaml
+
+    - name: Replace IP in resolv.conf
+      replace:
+        path: /etc/resolv.conf
+        regexp: '^nameserver\s+127\.0\.0\.53'
+        replace: "nameserver 192.168.1.49"
+
+    - name: Restart systemd-resolved service
+      service:
+        name: systemd-resolved
+        state: restarted
+
+    - name: Rename cloud.cfg to cloud.cfg.bkp
+      command: mv "/etc/cloud/cloud.cfg" "/etc/cloud/cloud.cfg.bkp"
+      args:
+        creates: "/etc/cloud/cloud.cfg.bkp"
+
+    - name: Restart networking
+      command: systemctl restart networking
+
+    - name: Apply netplan configuration
+      command: netplan apply
+
+    - name: Pause for 1 minute
+      pause:
+        minutes: 1
+
+    - name: Update apt update
+      apt:
+        update_cache: yes
