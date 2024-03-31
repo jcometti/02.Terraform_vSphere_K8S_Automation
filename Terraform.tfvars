@@ -17,6 +17,7 @@ vsphere-unverified-ssl = "true"
 vm_vcpu                = "2"
 vm_memory              = "4096"
 vm_ipv4_netmask        = "24"
+
 # vm-network             = "Home Network"
 vm_ipv4_gateway = "192.168.1.48"
 vm_dns_servers  = ["192.168.1.49", "8.8.8.8"]
@@ -30,7 +31,6 @@ vms = {
   lab-k8s-test_01 = {
     name  = "lab-k8s-m01"
     vm_ip = "192.168.1.120"
-
   },
   lab-k8s-test_02 = {
     name  = "lab-k8s-w01"
@@ -39,5 +39,13 @@ vms = {
   lab-k8s-test_03 = {
     name  = "lab-k8s-w02"
     vm_ip = "192.168.1.122"
+  },
+  lab-k8s-test_04 = {
+    name  = "lab-k8s-w03"
+    vm_ip = "192.168.1.123"
+  },
+  lab-k8s-test_05 = {
+    name  = "rancher"
+    vm_ip = "192.168.1.125"
   }
 }

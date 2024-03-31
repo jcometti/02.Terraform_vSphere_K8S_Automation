@@ -1,0 +1,7 @@
+---
+- name: Install Rancher container
+  hosts: rancher
+  become: yes
+  tasks:
+    - name: Run Rancher container
+      command: "docker run --privileged -d --name rancher --restart=unless-stopped -v /opt/rancher:/var/lib/rancher -p 80:80 -p 443:443 rancher/rancher:v2.8.2"
